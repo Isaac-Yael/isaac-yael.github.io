@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { collections, Photo } from '../data/collections'
 import { Lightbox } from '../components/Lightbox'
 import { GradientLine } from '../components/GradientLine'
+import { useLanguage } from '../i18n/LanguageContext'
 
 type FilteredPhoto = Photo & { collectionName: string }
 
 export function GallerySection() {
+  const { t } = useLanguage()
   const [activeId, setActiveId] = useState<string>('all')
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
@@ -23,7 +25,7 @@ export function GallerySection() {
   return (
     <section
       id="fotografia"
-      className="relative px-4 sm:px-8 md:px-12 lg:px-20 py-24 md:py-32 overflow-hidden"
+      className="relative px-4 sm:px-8 md:px-12 lg:px-20 py-12 md:py-32 overflow-hidden"
       
     >
       {/* Glow accent for this section */}
@@ -47,7 +49,7 @@ export function GallerySection() {
           viewport={{ once: true }}
           className="text-xs uppercase tracking-[0.3em] text-white/55 font-light mb-3"
         >
-          Portafolio
+          {t.gallery.kicker}
         </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
@@ -57,7 +59,7 @@ export function GallerySection() {
           className="font-bold uppercase text-white leading-none tracking-tight"
           style={{ fontSize: 'clamp(2rem, 5vw, 5rem)' }}
         >
-          Fotografía
+          {t.gallery.heading}
         </motion.h2>
         <motion.div
           initial={{ scaleX: 0 }}
@@ -80,7 +82,7 @@ export function GallerySection() {
         className="relative z-10 flex items-center gap-2 mb-10 md:mb-12 overflow-x-auto pb-1 scrollbar-none"
       >
         <TabButton
-          label="Todos"
+          label={t.gallery.tabAll}
           active={activeId === 'all'}
           count={collections.reduce((acc, c) => acc + c.photos.length, 0)}
           onClick={() => setActiveId('all')}
@@ -104,38 +106,42 @@ export function GallerySection() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="relative z-10 columns-1 sm:columns-2 lg:columns-3 gap-2"
+          className="relative z-10"
         >
-          {filteredPhotos.map((photo, i) => (
-            <motion.div
-              key={photo.src}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: Math.min(i * 0.04, 0.4) }}
-              className="break-inside-avoid mb-2 group relative cursor-pointer overflow-hidden rounded-xl"
-              onClick={() => setLightboxIndex(i)}
-            >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                loading="lazy"
-                className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.03]"
-                draggable={false}
-              />
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-end p-4">
-                <span className="text-white/0 group-hover:text-white/80 text-xs uppercase tracking-widest font-light transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                  {photo.collectionName}
-                </span>
-              </div>
-            </motion.div>
-          ))}
+          {/* Mobile: 2 columnas desfasadas */}
+          <div className="lg:hidden grid grid-cols-2 gap-2 items-start">
+            {/* Columna izquierda — fotos pares */}
+            <div className="flex flex-col gap-2">
+              {filteredPhotos
+                .map((photo, i) => ({ photo, i }))
+                .filter(({ i }) => i % 2 === 0)
+                .map(({ photo, i }) => (
+                  <GalleryCard key={photo.src} photo={photo} index={i} onClick={() => setLightboxIndex(i)} delay={Math.min(i * 0.04, 0.4)} />
+                ))}
+            </div>
+            {/* Columna derecha — fotos impares, desplazadas hacia abajo */}
+            <div className="flex flex-col gap-2 mt-10">
+              {filteredPhotos
+                .map((photo, i) => ({ photo, i }))
+                .filter(({ i }) => i % 2 === 1)
+                .map(({ photo, i }) => (
+                  <GalleryCard key={photo.src} photo={photo} index={i} onClick={() => setLightboxIndex(i)} delay={Math.min(i * 0.04, 0.4)} />
+                ))}
+            </div>
+          </div>
+
+          {/* Desktop: masonry 3 columnas */}
+          <div className="hidden lg:block columns-3 gap-2">
+            {filteredPhotos.map((photo, i) => (
+              <GalleryCard key={photo.src} photo={photo} index={i} onClick={() => setLightboxIndex(i)} delay={Math.min(i * 0.04, 0.4)} masonry />
+            ))}
+          </div>
         </motion.div>
       </AnimatePresence>
 
       {filteredPhotos.length === 0 && (
         <div className="text-center py-24 text-white/35 text-sm uppercase tracking-widest">
-          Próximamente
+          {t.gallery.empty}
         </div>
       )}
 
@@ -149,6 +155,39 @@ export function GallerySection() {
         )}
       </AnimatePresence>
     </section>
+  )
+}
+
+interface GalleryCardProps {
+  photo: FilteredPhoto
+  index: number
+  delay: number
+  onClick: () => void
+  masonry?: boolean
+}
+
+function GalleryCard({ photo, delay, onClick, masonry }: GalleryCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay }}
+      className={`group relative cursor-pointer overflow-hidden rounded-xl ${masonry ? 'break-inside-avoid mb-2' : ''}`}
+      onClick={onClick}
+    >
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        loading="lazy"
+        className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.03]"
+        draggable={false}
+      />
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-end p-4">
+        <span className="text-white/0 group-hover:text-white/80 text-xs uppercase tracking-widest font-light transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+          {photo.collectionName}
+        </span>
+      </div>
+    </motion.div>
   )
 }
 

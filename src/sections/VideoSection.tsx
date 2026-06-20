@@ -3,14 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Play, X } from 'lucide-react'
 import { videos } from '../data/videos'
 import { GradientLine } from '../components/GradientLine'
+import { useLanguage } from '../i18n/LanguageContext'
 
 export function VideoSection() {
+  const { t } = useLanguage()
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
 
   return (
     <section
       id="video"
-      className="relative px-4 sm:px-8 md:px-12 lg:px-20 py-24 md:py-32 overflow-hidden"
+      className="relative px-4 sm:px-8 md:px-12 lg:px-20 py-12 md:py-32 overflow-hidden"
       
     >
       {/* Glow */}
@@ -34,7 +36,7 @@ export function VideoSection() {
           viewport={{ once: true }}
           className="text-xs uppercase tracking-[0.3em] text-white/55 font-light mb-3"
         >
-          Producción audiovisual
+          {t.video.kicker}
         </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
@@ -44,7 +46,7 @@ export function VideoSection() {
           className="font-bold uppercase text-white leading-none tracking-tight"
           style={{ fontSize: 'clamp(2rem, 5vw, 5rem)' }}
         >
-          Video & Reels
+          {t.video.heading}
         </motion.h2>
         <motion.div
           initial={{ scaleX: 0 }}
@@ -104,10 +106,10 @@ export function VideoSection() {
               <Play size={22} className="text-white/40 translate-x-0.5" />
             </div>
             <p className="text-white/45 text-sm uppercase tracking-widest font-light mb-2">
-              Próximamente
+              {t.video.empty}
             </p>
             <p className="text-white/25 text-xs font-light max-w-xs mx-auto">
-              Agrega tus videos editando{' '}
+              {t.video.emptyHint}{' '}
               <code className="text-white/35">src/data/videos.ts</code>
             </p>
           </motion.div>

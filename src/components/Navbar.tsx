@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-
-const NAV_LINKS = [
-  { label: 'Fotografía', href: '#fotografia' },
-  { label: 'Video', href: '#video' },
-  { label: 'About', href: '#about' },
-  { label: 'Contacto', href: '#contacto' },
-]
+import { imgUrl } from '../utils/imgUrl'
+import { useLanguage } from '../i18n/LanguageContext'
+import { LanguageToggle } from './LanguageToggle'
 
 export function Navbar() {
+  const { t } = useLanguage()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -18,6 +15,13 @@ export function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const navLinks = [
+    { label: t.nav.photo, href: '#fotografia' },
+    { label: t.nav.video, href: '#video' },
+    { label: t.nav.about, href: '#about' },
+    { label: t.nav.contact, href: '#contacto' },
+  ]
 
   return (
     <>
@@ -33,7 +37,7 @@ export function Navbar() {
           {/* Logo */}
           <a href="#" aria-label="Isaac Ruiz">
             <img
-              src="/images/logo.png"
+              src={imgUrl('/images/logo.png')}
               alt="Isaac Ruiz"
               className="h-6 md:h-7 w-auto"
             />
@@ -41,7 +45,7 @@ export function Navbar() {
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-8 lg:gap-12">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -50,16 +54,20 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
+            <LanguageToggle />
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden text-white p-1"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Abrir menú"
-          >
-            <Menu size={22} />
-          </button>
+          {/* Mobile: toggle + hamburger */}
+          <div className="md:hidden flex items-center gap-3">
+            <LanguageToggle />
+            <button
+              className="text-white p-1"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Abrir menú"
+            >
+              <Menu size={22} />
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -75,14 +83,14 @@ export function Navbar() {
             style={{ background: '#07060F' }}
           >
             <div className="flex items-center justify-between px-6 py-4">
-              <img src="/images/logo.png" alt="Isaac Ruiz" className="h-6 w-auto" />
+              <img src={imgUrl('/images/logo.png')} alt="Isaac Ruiz" className="h-6 w-auto" />
               <button onClick={() => setMenuOpen(false)} className="text-white p-1">
                 <X size={22} />
               </button>
             </div>
 
             <div className="flex flex-col items-center justify-center flex-1 gap-10">
-              {NAV_LINKS.map((link, i) => (
+              {navLinks.map((link, i) => (
                 <motion.a
                   key={link.href}
                   href={link.href}

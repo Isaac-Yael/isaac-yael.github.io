@@ -1,18 +1,21 @@
 import { motion } from 'framer-motion'
 import { GradientLine } from '../components/GradientLine'
 import { ArrowDown } from 'lucide-react'
+import { imgUrl } from '../utils/imgUrl'
+import { useLanguage } from '../i18n/LanguageContext'
 
 // 3 fotos del hero — cambia las rutas para personalizar
 const HERO_PHOTOS = [
-  { src: '/images/collections/retratos/09.png', height: '62%' },
-  { src: '/images/collections/retratos/03.png', height: '90%' },
-  { src: '/images/collections/retratos/05.png', height: '74%' },
+  { src: imgUrl('/images/collections/retratos/09.png'), height: '62%' },
+  { src: imgUrl('/images/collections/retratos/03.png'), height: '90%' },
+  { src: imgUrl('/images/collections/retratos/05.png'), height: '74%' },
 ]
 
 export function HeroSection() {
+  const { t } = useLanguage()
   return (
     <section
-      className="relative min-h-screen flex flex-col overflow-hidden"
+      className="relative lg:min-h-screen flex flex-col overflow-hidden"
       
     >
       {/* Destello sutil extra solo en el centro del hero */}
@@ -30,7 +33,7 @@ export function HeroSection() {
             transition={{ delay: 0.15, duration: 0.6 }}
             className="text-xs sm:text-sm uppercase tracking-[0.3em] text-white/60 font-light mb-4"
           >
-            Isaac Ruiz · Barcelona
+            {t.hero.kicker}
           </motion.p>
 
           {/* Main title: CONTENT CREATOR */}
@@ -42,7 +45,7 @@ export function HeroSection() {
               className="font-bold uppercase leading-none tracking-tight text-white"
               style={{ fontSize: 'clamp(3rem, 7.5vw, 8.5rem)' }}
             >
-              CONTENT
+              {t.hero.titleLine1}
             </motion.h1>
           </div>
           <div className="overflow-hidden">
@@ -57,7 +60,7 @@ export function HeroSection() {
                 color: 'transparent',
               }}
             >
-              CREATOR
+              {t.hero.titleLine2}
             </motion.h1>
           </div>
 
@@ -80,9 +83,9 @@ export function HeroSection() {
             className="mt-4 text-white/55 font-light leading-relaxed"
             style={{ fontSize: 'clamp(0.8rem, 1.2vw, 0.92rem)' }}
           >
-            Diseñador visual y productor audiovisual
+            {t.hero.tagline1}
             <br />
-            mexicano, basado en Barcelona, España.
+            {t.hero.tagline2}
           </motion.p>
 
           {/* CTA */}
@@ -93,12 +96,12 @@ export function HeroSection() {
             className="mt-7 flex items-center gap-6"
           >
             <a href="#fotografia" className="flex items-center gap-2 text-white/80 hover:text-white font-light text-xs uppercase tracking-widest transition-colors duration-200 group">
-              <span>Ver Trabajo</span>
+              <span>{t.hero.ctaWork}</span>
               <ArrowDown size={13} className="group-hover:translate-y-1 transition-transform duration-200" />
             </a>
             <span className="w-px h-3 bg-white/20" />
             <a href="#contacto" className="text-white/50 hover:text-white/80 font-light text-xs uppercase tracking-widest transition-colors duration-200">
-              Contacto
+              {t.hero.ctaContact}
             </a>
           </motion.div>
         </div>
@@ -108,8 +111,8 @@ export function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="z-10 w-full lg:flex-1 lg:pl-8"
-          style={{ height: 'clamp(360px, 78vh, 760px)' }}
+          className="hidden lg:block z-10 w-full lg:flex-1 lg:pl-8 lg:h-[78vh]"
+          style={{ maxHeight: '760px' }}
         >
           <div
             className="w-full h-full flex items-end"
@@ -121,7 +124,7 @@ export function HeroSection() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-1 overflow-hidden rounded-2xl"
+                className="flex-1 overflow-hidden rounded-xl lg:rounded-2xl"
                 style={{ height: photo.height }}
               >
                 <img
@@ -147,7 +150,7 @@ export function HeroSection() {
           © {new Date().getFullYear()} Isaac Ruiz
         </span>
         <span className="text-white/35 text-xs uppercase tracking-widest font-light">
-          Barcelona, España
+          {t.hero.location}
         </span>
       </motion.div>
     </section>

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Mail } from 'lucide-react'
 import { GradientLine } from '../components/GradientLine'
+import { useLanguage } from '../i18n/LanguageContext'
 
 function WhatsAppIcon({ size = 16 }: { size?: number }) {
   return (
@@ -11,10 +12,11 @@ function WhatsAppIcon({ size = 16 }: { size?: number }) {
 }
 
 export function ContactSection() {
+  const { t } = useLanguage()
   return (
     <section
       id="contacto"
-      className="relative px-4 sm:px-8 md:px-12 lg:px-20 py-24 md:py-36 overflow-hidden"
+      className="relative px-4 sm:px-8 md:px-12 lg:px-20 py-12 md:py-36 overflow-hidden"
       
     >
       {/* Glow */}
@@ -49,7 +51,7 @@ export function ContactSection() {
           viewport={{ once: true }}
           className="text-xs uppercase tracking-[0.3em] text-white/55 font-light mb-4"
         >
-          Trabajemos juntos
+          {t.contact.kicker}
         </motion.p>
 
         {/* Heading */}
@@ -61,7 +63,7 @@ export function ContactSection() {
           className="font-bold uppercase text-white leading-none tracking-tight mb-4"
           style={{ fontSize: 'clamp(2rem, 5vw, 5rem)' }}
         >
-          Hablemos
+          {t.contact.heading}
         </motion.h2>
 
         <motion.div
@@ -84,8 +86,7 @@ export function ContactSection() {
           className="text-white/60 font-light leading-relaxed mb-10 max-w-lg"
           style={{ fontSize: 'clamp(0.85rem, 1.4vw, 1rem)' }}
         >
-          ¿Tienes un proyecto en mente? Me encantaría escucharte. Escríbeme
-          por correo o por WhatsApp y empecemos a construir algo increíble.
+          {t.contact.description}
         </motion.p>
 
         {/* Buttons */}

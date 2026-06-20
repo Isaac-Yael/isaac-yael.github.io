@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion'
-import { services } from '../data/services'
 import { GradientLine } from '../components/GradientLine'
+import { useLanguage } from '../i18n/LanguageContext'
 
 export function ServicesSection() {
+  const { t } = useLanguage()
   return (
     <section
-      className="relative px-4 sm:px-8 md:px-12 lg:px-20 py-24 md:py-32 overflow-hidden"
+      className="relative px-4 sm:px-8 md:px-12 lg:px-20 py-12 md:py-32 overflow-hidden"
       style={{ background: '#0A0918' }}
     >
       {/* Glow */}
@@ -29,7 +30,7 @@ export function ServicesSection() {
           viewport={{ once: true }}
           className="text-xs uppercase tracking-[0.3em] text-white/55 font-light mb-3"
         >
-          ¿En qué puedo ayudarte?
+          {t.services.kicker}
         </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
@@ -39,7 +40,7 @@ export function ServicesSection() {
           className="font-bold uppercase text-white leading-none tracking-tight"
           style={{ fontSize: 'clamp(2rem, 5vw, 5rem)' }}
         >
-          Servicios
+          {t.services.heading}
         </motion.h2>
         <motion.div
           initial={{ scaleX: 0 }}
@@ -55,9 +56,9 @@ export function ServicesSection() {
 
       {/* Service list */}
       <div className="relative z-10 max-w-4xl">
-        {services.map((svc, i) => (
+        {t.services.list.map((svc, i) => (
           <motion.div
-            key={svc.num}
+            key={svc.name}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -69,7 +70,7 @@ export function ServicesSection() {
               className="font-bold text-white/15 group-hover:text-white/25 transition-colors duration-300 flex-shrink-0 leading-none select-none"
               style={{ fontSize: 'clamp(1.5rem, 4vw, 3.5rem)' }}
             >
-              {svc.num}
+              {String(i + 1).padStart(2, '0')}
             </span>
 
             {/* Name + desc */}
